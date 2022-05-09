@@ -5,6 +5,8 @@ from stega.injector import Injector
 from kombu import Connection, Exchange, Queue
 from kombu.mixins import ConsumerMixin
 from decoder import Decoder
+from colorama import Fore, Style
+from datetime import datetime
 
 SPLITTER = "__+__"
 rabbit_url = 'amqp://guest:guest@localhost:5672//'
@@ -31,7 +33,8 @@ class Worker(ConsumerMixin):
             splitted = decoded_message.split(SPLITTER)
             username = splitted[0]
             encoded_message = splitted[1]
-            print('DECODED MESSAGE: ', decoder.decrypt(username, encoded_message))
+            time = datetime.utcnow().strftime("%m/%d/%Y, %H:%M:%S")
+            print(f"{Fore.MAGENTA}[{time}] {Fore.CYAN}{username}{Style.RESET_ALL}: {decoder.decrypt(username, encoded_message)}")
 
         message.ack()
 

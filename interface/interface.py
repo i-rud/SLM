@@ -18,20 +18,20 @@ class Interface:
         self.session_key = ""
 
     def login(self) -> bool:
-        login = input("Your login: ")
+        login = input(f"{Fore.LIGHTMAGENTA_EX}Your login{Style.RESET_ALL}: ")
         response = db.get_user_info(login)
         if not response:
-            print(f"/Authorization/ No user was found...")
+            print(f"{Fore.LIGHTYELLOW_EX}[Authorization]{Style.RESET_ALL}: {Fore.RED}User not found. Communicate to administrator{Style.RESET_ALL}")
             return False
 
         correct_password = response[0][PASSWORD_MAPPING]
-        password = getpass("Password: ")
+        password = getpass(f"{Fore.LIGHTMAGENTA_EX}Password{Style.RESET_ALL}: ")
 
         if correct_password != md5(password.encode("utf-8")).hexdigest():
-            print("/Authorization/ Wrong password")
+            print(f"{Fore.LIGHTYELLOW_EX}[Authorization]{Style.RESET_ALL}: {Fore.RED}Wrong password{Style.RESET_ALL}")
             return False
 
-        print("/Authorization/ Authorization was successful")
+        print(f"{Fore.LIGHTYELLOW_EX}[Authorization]{Style.RESET_ALL}: {Fore.GREEN}Authorization was successful{Style.RESET_ALL}")
         self.session_login = login
         self.session_key = response[0][KEY_MAPPING]
 
@@ -41,7 +41,7 @@ class Interface:
         rabbitmq = RabbitMQUtils()
         command_line_text = ""
         while True:
-            command_line_text = input("Entry message to send: ")
+            command_line_text = input(f"\nEntry message to send: ")
             result_message = f"{self.session_login}{SPLITTER}{cryptocode.encrypt(command_line_text, self.session_key)}"
 
             rabbitmq.send_message(result_message)

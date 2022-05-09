@@ -1,6 +1,7 @@
 from kombu import Connection, Exchange, Producer, Queue
 from message_processor import MessageProcessor
 from stega.injector import Injector
+from colorama import Fore, Style
 
 import cv2
 import base64
@@ -24,6 +25,7 @@ queue.maybe_bind(conn)
 queue.declare()
 
 capture = cv2.VideoCapture(0)
+print(f"{Fore.LIGHTGREEN_EX}Service is on air{Style.RESET_ALL}")
 
 while True:
     ret, frame = capture.read()
